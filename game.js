@@ -1447,7 +1447,7 @@ const FISH_ART = {
         <path d="M60,22 Q68,18 76,16 M60,21 Q66,20 72,22 M60,32 Q66,34 72,36" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-linecap="round"/>
         <circle cx="56" cy="24" r="2" fill="rgba(0,0,0,0.5)"/>
     </svg>`,
-    "Pike": `<img src="file:///Users/christophersierra/.gemini/antigravity/brain/57eda3ee-d0a0-44e4-bf59-13100d77c05f/media__1775486226270.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
+    "Pike": `<img src="assets/pike.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
     "Snapper": `<svg viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14,26 Q20,12 36,16 Q46,10 54,16 L62,22 Q66,26 62,30 L54,36 Q46,40 36,36 Q20,40 14,30 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.95)" stroke-width="1.2" stroke-linecap="round"/>
         <path d="M62,22 L72,16 M62,30 L72,38" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
@@ -1480,15 +1480,15 @@ const FISH_ART = {
         <path d="M30,18 L30,36 M38,16 L38,38 M46,16 L46,38 M54,18 L54,34" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
         <circle cx="60" cy="24" r="2.2" fill="rgba(0,0,0,0.5)"/>
     </svg>`,
-    "Tuna": `<img src="file:///Users/christophersierra/.gemini/antigravity/brain/57eda3ee-d0a0-44e4-bf59-13100d77c05f/media__1775486375973.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
+    "Tuna": `<img src="assets/tuna.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
     "Barracuda": `<svg viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4,26 Q10,20 22,22 Q34,20 46,22 Q54,20 62,22 Q68,22 72,24 L76,25 Q78,26 76,27 L72,28 Q68,30 62,30 Q54,32 46,30 Q34,32 22,30 Q10,32 4,28 Z" fill="rgba(255,255,255,0.85)" stroke="rgba(255,255,255,0.95)" stroke-width="1.2" stroke-linecap="round"/>
         <path d="M76,25 L80,22 M76,27 L80,30" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
         <path d="M72,24 L74,26 L72,28" stroke="rgba(255,255,255,0.6)" stroke-width="0.8" fill="none"/>
         <circle cx="70" cy="25" r="1.5" fill="rgba(0,0,0,0.5)"/>
     </svg>`,
-    "Swordfish": `<img src="file:///Users/christophersierra/.gemini/antigravity/brain/57eda3ee-d0a0-44e4-bf59-13100d77c05f/media__1775486315503.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
-    "Marlin": `<img src="file:///Users/christophersierra/.gemini/antigravity/brain/57eda3ee-d0a0-44e4-bf59-13100d77c05f/media__1775486074103.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`
+    "Swordfish": `<img src="assets/swordfish.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`,
+    "Marlin": `<img src="assets/marlin.jpg" style="width: 100%; height: 100%; object-fit: contain; mix-blend-mode: screen; border-radius: 4px; pointer-events: none;" />`
 };
 
 function updateDebuffUI() {
