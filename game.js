@@ -303,12 +303,6 @@ const shopOffersEl = document.getElementById('shop-offers');
 const shopRerollBtn = document.getElementById('shop-reroll-btn');
 const shopNextRoundBtn = document.getElementById('shop-next-round-btn');
 
-// Map DOM
-const mapPanel = document.getElementById('map-panel');
-const mapPathEl = document.getElementById('map-path');
-const mapStartBtn = document.getElementById('map-start-btn');
-const mapUpcomingDescEl = document.getElementById('map-upcoming-desc');
-
 // Reward DOM
 const rewardPanel = document.getElementById('reward-panel');
 const rewardTitleEl = document.getElementById('reward-title');
@@ -833,125 +827,22 @@ function proceedFromShop() {
     if (currentEncounter > 30) {
         inEndlessMode = true;
     }
-    openMap();
+    startNextRound();
 }
 
 function getNodeInfo(encounterNum) {
     if (encounterNum > 30) {
-        return { type: 'endless', label: `Endless ${encounterNum - 30}`, icon: '🌀' };
+        return { label: `ENDLESS SPOT ${encounterNum}`, type: 'normal' };
     }
     if (encounterNum === 30) {
-        return { type: 'final', label: 'Final Championship', icon: '👑' };
+        return { label: "FINAL CHAMPIONSHIP", type: 'final' };
     }
-    if (encounterNum % 3 === 0) {
-        return { type: 'regional', label: `Regional Champ ${encounterNum / 3}`, icon: '🏆' };
+    if (encounterNum % 10 === 0) {
+        const regionalNum = encounterNum / 10;
+        return { label: `REGIONAL CHAMPIONSHIP ${regionalNum}`, type: 'regional' };
     }
-    return { type: 'normal', label: `Fishing Spot ${encounterNum}`, icon: '❌' };
+    return { label: `FISHING SPOT ${encounterNum}`, type: 'normal' };
 }
-
-// =====================
-// MAP SYSTEM
-// =====================
-
-function openMap() {
-    gameBoard.style.display = 'none';
-    modifiersArea.style.display = 'none';
-    controlsFooter.style.display = 'none';
-    if (deckInfoArea) deckInfoArea.style.display = 'none';
-    shopPanel.style.display = 'none';
-    rewardPanel.style.display = 'none';
-
-    mapPanel.style.display = 'flex';
-    renderMap();
-}
-
-function closeMap() {
-    mapPanel.style.display = 'none';
-    startNextRound();
-}
-
-function renderMap() {
-    mapPathEl.innerHTML = '';
-    
-    const currentNodeInfo = getNodeInfo(currentEncounter);
-    mapUpcomingDescEl.textContent = `Next: ${currentNodeInfo.label}`;
-
-    // Render nodes up to max 30 unless endless
-    let maxMapNode = inEndlessMode ? currentEncounter + 3 : 30;
-    
-    // Arrays to hold coordinates for SVG line drawing
-    const coords = [];
-
-    // First pass: Calculate positions and build SVG
-    for (let i = 1; i <= maxMapNode; i++) {
-        // Parametric t from 0 (bottom) to 1 (top)
-        const totalNodesRaw = inEndlessMode ? Math.max(30, currentEncounter + 3) : 30;
-        const t = (i - 1) / (totalNodesRaw - 1);
-        
-        // y ranges from 92% (bottom) to 8% (top)
-        const yPos = 92 - (t * 84);
-        
-        // x winds back and forth. Math.sin(t * PI * 3) gives 1.5 full waves. 
-        // We multiply by 30 to get +/- 30% from the center (50%).
-        const xPos = 50 + Math.sin(t * Math.PI * 3) * 30;
-        
-        coords.push({ x: xPos, y: yPos, i: i });
-    }
-
-    // Generate SVG path overlay
-    const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svgEl.setAttribute("class", "map-svg-overlay");
-    svgEl.setAttribute("width", "100%");
-    svgEl.setAttribute("height", "100%");
-    
-    for (let j = 0; j < coords.length - 1; j++) {
-        const p1 = coords[j];
-        const p2 = coords[j+1];
-        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", `${p1.x}%`);
-        line.setAttribute("y1", `${p1.y}%`);
-        line.setAttribute("x2", `${p2.x}%`);
-        line.setAttribute("y2", `${p2.y}%`);
-        line.setAttribute("stroke", p1.i < currentEncounter ? "rgba(63, 185, 80, 0.8)" : "rgba(255,255,255,0.4)");
-        line.setAttribute("stroke-width", "5");
-        line.setAttribute("stroke-dasharray", "10,10");
-        svgEl.appendChild(line);
-    }
-    mapPathEl.appendChild(svgEl);
-
-    // Second pass: Plot HTML nodes
-    coords.forEach(coord => {
-        const info = getNodeInfo(coord.i);
-        const nodeEl = document.createElement('div');
-        
-        let stateClass = '';
-        if (coord.i < currentEncounter) stateClass = 'node-completed';
-        else if (coord.i === currentEncounter) stateClass = 'node-current';
-        else stateClass = 'node-locked';
-
-        nodeEl.className = `map-node node-${info.type} ${stateClass}`;
-        nodeEl.style.left = `${coord.x}%`;
-        nodeEl.style.top = `${coord.y}%`;
-        nodeEl.setAttribute('data-tooltip', info.label);
-        
-        let labelHtml = info.type === 'final' ? `<div class="node-label">${info.label}</div>` : '';
-        
-        nodeEl.innerHTML = `
-            <div class="node-icon">${info.icon}</div>
-            ${labelHtml}
-        `;
-        mapPathEl.appendChild(nodeEl);
-    });
-
-    // Scroll map to center current node
-    setTimeout(() => {
-        const currentEl = mapPathEl.querySelector('.node-current');
-        if (currentEl) {
-            currentEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-        }
-    }, 100);
-}
-
 // =====================
 // REWARD SYSTEM (Pack + Trim)
 // =====================
@@ -1613,20 +1504,13 @@ function init() {
         skipReward();
     });
 
-    mapStartBtn.addEventListener('click', () => {
-        closeMap();
-    });
-
-    document.getElementById('start-game-btn').addEventListener('click', () => {
-        document.getElementById('start-screen').style.display = 'none';
-        document.getElementById('game-container').style.display = 'block';
-        startNextRound();
-    });
+    // Start Game Directly
+    startNextRound();
 
     updateGoldUI();
     updateDeckUI();
     renderModifiers();
-    console.log("Fishing Chains - Finite Deck System Initialized");
+    console.log("Fishing Chains - Streamlined Loop Initialized");
 }
 
 window.addEventListener('DOMContentLoaded', init);

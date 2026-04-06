@@ -50,7 +50,7 @@ body {
     left: -5%;
     width: 110%;
     height: 110%;
-    background: url('file:///Users/christophersierra/.gemini/antigravity/brain/57eda3ee-d0a0-44e4-bf59-13100d77c05f/media__1775484833549.jpg') center/cover no-repeat;
+    background: url('assets/water-bg.jpg') center/cover no-repeat;
     filter: blur(20px) brightness(0.15) saturate(1.2);
     z-index: -1;
     pointer-events: none;
