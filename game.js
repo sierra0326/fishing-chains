@@ -303,7 +303,12 @@ const shopOffersEl = document.getElementById('shop-offers');
 const shopRerollBtn = document.getElementById('shop-reroll-btn');
 const shopNextRoundBtn = document.getElementById('shop-next-round-btn');
 
-// Reward DOM
+// PANELS - MAP
+const mapPanel = document.getElementById('map-panel');
+const mapPathEl = document.getElementById('map-path');
+const mapStartBtn = document.getElementById('map-start-btn');
+const mapUpcomingDescEl = document.getElementById('map-upcoming-desc');
+
 const rewardPanel = document.getElementById('reward-panel');
 const rewardTitleEl = document.getElementById('reward-title');
 const rewardSubtitleEl = document.getElementById('reward-subtitle');
@@ -827,21 +832,113 @@ function proceedFromShop() {
     if (currentEncounter > 30) {
         inEndlessMode = true;
     }
-    startNextRound();
+    openMap();
 }
 
 function getNodeInfo(encounterNum) {
     if (encounterNum > 30) {
-        return { label: `ENDLESS SPOT ${encounterNum}`, type: 'normal' };
+        return { label: `ENDLESS ${encounterNum - 30}`, type: 'endless', icon: '🌀' };
     }
     if (encounterNum === 30) {
-        return { label: "FINAL CHAMPIONSHIP", type: 'final' };
+        return { label: "FINAL CHAMPIONSHIP", type: 'final', icon: '👑' };
     }
     if (encounterNum % 10 === 0) {
-        const regionalNum = encounterNum / 10;
-        return { label: `REGIONAL CHAMPIONSHIP ${regionalNum}`, type: 'regional' };
+        return { label: `REGIONAL CHAMPIONSHIP ${encounterNum/10}`, type: 'regional', icon: '🏆' };
     }
-    return { label: `FISHING SPOT ${encounterNum}`, type: 'normal' };
+    return { label: `FISHING SPOT ${encounterNum}`, type: 'normal', icon: '❌' };
+}
+
+function openMap() {
+    gameBoard.style.display = 'none';
+    modifiersArea.style.display = 'none';
+    controlsFooter.style.display = 'none';
+    if (deckInfoArea) deckInfoArea.style.display = 'none';
+    shopPanel.style.display = 'none';
+    rewardPanel.style.display = 'none';
+
+    mapPanel.style.display = 'flex';
+    renderMap();
+}
+
+function closeMap() {
+    mapPanel.style.display = 'none';
+    startNextRound();
+}
+
+function renderMap() {
+    if (!mapPathEl) return;
+    mapPathEl.innerHTML = '';
+
+    // Total nodes in the tournament trail
+    const totalNodes = inEndlessMode ? Math.max(30, currentEncounter + 5) : 30;
+    const coords = [];
+
+    // Generate Path SVG
+    const svgEl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgEl.setAttribute("class", "map-svg-overlay");
+    svgEl.setAttribute("width", "100%");
+    svgEl.setAttribute("height", "100%");
+
+    // Calculate positions (bottom to top)
+    for (let i = 1; i <= totalNodes; i++) {
+        // t from 0 (bottom) to 1 (top)
+        const t = (i - 1) / (totalNodes - 1);
+        const yPos = 92 - (t * 84); // 92% at start, 8% at end
+        const xPos = 50 + Math.sin(t * Math.PI * 4) * 25; // Sinusoidal winding
+        coords.push({ x: xPos, y: yPos, i: i });
+    }
+
+    // Draw the path line segments
+    for (let j = 0; j < coords.length - 1; j++) {
+        const p1 = coords[j];
+        const p2 = coords[j+1];
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", `${p1.x}%`);
+        line.setAttribute("y1", `${p1.y}%`);
+        line.setAttribute("x2", `${p2.x}%`);
+        line.setAttribute("y2", `${p2.y}%`);
+        
+        const isPassed = p1.i < currentEncounter;
+        line.setAttribute("stroke", isPassed ? "rgba(63, 185, 80, 0.7)" : "rgba(255,255,255,0.3)");
+        line.setAttribute("stroke-width", "5");
+        line.setAttribute("stroke-dasharray", "10,12");
+        svgEl.appendChild(line);
+    }
+    mapPathEl.appendChild(svgEl);
+
+    // Plot individual nodes
+    coords.forEach(coord => {
+        const info = getNodeInfo(coord.i);
+        const nodeEl = document.createElement('div');
+        
+        let stateClass = '';
+        if (coord.i < currentEncounter) stateClass = 'node-completed';
+        else if (coord.i === currentEncounter) stateClass = 'node-current';
+        else stateClass = 'node-locked';
+
+        nodeEl.className = `map-node node-${info.type} ${stateClass}`;
+        nodeEl.style.left = `${coord.x}%`;
+        nodeEl.style.top = `${coord.y}%`;
+        nodeEl.setAttribute('data-tooltip', info.label);
+
+        // Special labels for Championships
+        let labelHtml = (info.type === 'final' || info.type === 'regional') ? 
+                        `<div class="node-label">${info.label}</div>` : '';
+
+        nodeEl.innerHTML = `
+            <div class="node-icon">${info.icon}</div>
+            ${labelHtml}
+        `;
+        mapPathEl.appendChild(nodeEl);
+    });
+
+    // Auto-scroll to center current node
+    setTimeout(() => {
+        const currentEl = mapPathEl.querySelector('.node-current');
+        if (currentEl) {
+            currentEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, 150);
 }
 // =====================
 // REWARD SYSTEM (Pack + Trim)
@@ -1504,8 +1601,15 @@ function init() {
         skipReward();
     });
 
-    // Start Game Directly
-    startNextRound();
+    mapStartBtn.addEventListener('click', () => {
+        closeMap();
+    });
+
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+        document.getElementById('start-screen').style.display = 'none';
+        document.getElementById('game-container').style.display = 'block';
+        startNextRound();
+    });
 
     updateGoldUI();
     updateDeckUI();

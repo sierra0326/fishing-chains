@@ -17,7 +17,18 @@
 <body>
     <div class="global-water-bg"></div>
 
-    <div id="game-container">
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <div class="water-bg"></div>
+        <div class="water-overlay"></div>
+        <div class="start-content">
+            <h1 class="game-headline">FISHING CHAINS</h1>
+            <p class="game-subheadline">Climb the Tournament Ladder</p>
+            <button id="start-game-btn" class="primary-btn pulse-btn">START FISHING</button>
+        </div>
+    </div>
+
+    <div id="game-container" style="display:none;">
         <header>
             <h1>FISHING CHAINS</h1>
             <div id="stats-bar">
@@ -108,6 +119,20 @@
                 <button id="submit-btn" class="primary-btn" disabled>SUBMIT HAND</button>
             </div>
         </footer>
+
+        <!-- MAP PANEL (Vertical Trail) -->
+        <div id="map-panel" style="display:none;">
+            <div id="map-header">
+                <h2>WORLD MAP</h2>
+                <p id="map-upcoming-desc">Prepare for the next encounter</p>
+            </div>
+            <div id="map-scroller">
+                <div id="map-path"></div>
+            </div>
+            <div id="map-controls">
+                <button id="map-start-btn" class="primary-btn">START ENCOUNTER</button>
+            </div>
+        </div>
 
         <!-- REWARD PANEL (Pack + Trim) -->
         <div id="reward-panel" style="display:none;">
