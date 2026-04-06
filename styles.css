@@ -23,6 +23,11 @@
     --suit-red: #f85149;
     --suit-green: #3fb950;
     --suit-gold: #ffd33d;
+
+    /* Responsive Sizing */
+    --card-w: 105px;
+    --card-h: 165px;
+    --pack-w: 180px;
 }
 
 * {
@@ -369,8 +374,8 @@ h1 {
 }
 
 .fish-card {
-    width: 105px;
-    height: 165px;
+    width: var(--card-w);
+    height: var(--card-h);
     border-radius: 12px;
     border: 2px solid rgba(255,255,255,0.15);
     position: relative;
@@ -1036,7 +1041,7 @@ h1 {
 /* ===================== */
 
 .pack-choice {
-    width: 180px;
+    width: var(--pack-w);
     padding: 1.5rem 1.2rem;
     border-radius: 14px;
     border: 2px solid rgba(255,255,255,0.1);
@@ -1609,3 +1614,145 @@ h1 {
     z-index: 10;
 }
 
+@media screen and (max-width: 650px) {
+    :root {
+        --card-w: 85px;
+        --card-h: 135px;
+        --pack-w: 160px;
+    }
+
+    body {
+        padding-top: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    #game-container {
+        padding: 1rem;
+        gap: 1.2rem;
+    }
+
+    /* Start Screen Mobile */
+    .start-content {
+        padding: 3rem 1.5rem;
+        width: 90%;
+        gap: 1.5rem;
+    }
+
+    .game-headline {
+        font-size: 2.8rem;
+    }
+
+    .game-subheadline {
+        font-size: 0.9rem;
+        letter-spacing: 0.15em;
+    }
+
+    /* Stats Bar Mobile */
+    #stats-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .stat-item {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+        justify-content: center;
+    }
+
+    /* Hand Display 3x3 Mobile */
+    #hand-display {
+        gap: 0.8rem 0.5rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+    }
+
+    .fish-card.selected {
+        transform: translateY(-15px);
+    }
+    
+    @keyframes cardWobble {
+        0%, 100% { transform: translateY(-15px) rotate(-1.5deg); }
+        50% { transform: translateY(-15px) rotate(1.5deg); }
+    }
+
+    .card-rank { font-size: 1.4rem; top: 4px; left: 6px; }
+    .card-art { margin-top: 30px; }
+    .card-fish-name { font-size: 0.5rem; }
+
+    /* Footer Mobile */
+    #controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+
+    .game-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .action-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+    }
+
+    .primary-btn {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    /* Map Panel Mobile */
+    #map-panel {
+        height: 85vh;
+        padding: 0.5rem;
+    }
+
+    #map-header h2 { font-size: 1.6rem; }
+    #map-scroller { height: 75vh; }
+    #map-path { width: 100%; height: 2500px; }
+    
+    .map-node { width: 50px; height: 50px; }
+    .node-icon { font-size: 1.4rem; }
+    .node-label { display: none; } /* Hide labels on mobile map to prevent clutter */
+
+    /* Shop/Rewards Mobile */
+    #shop-offers, #reward-cards {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        width: 100%;
+        max-height: none; /* Allow natural scrolling on mobile */
+        padding-bottom: 2rem;
+    }
+
+    #reward-panel {
+        padding: 1.5rem 1rem;
+        width: 100%;
+        border-radius: 0; /* Full width edge-to-edge on small phones */
+    }
+
+    .shop-offer-card, .pack-choice {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+
+    .trim-option {
+        width: 75px; 
+        height: 115px;
+    }
+}
