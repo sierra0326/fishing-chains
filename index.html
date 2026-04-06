@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishing Chains | A Roguelike Fishing Combo Game</title>
+    <meta name="description"
+        content="A Balatro-style roguelike combo game with a fishing theme. Draw fish, build combos, and upgrade your gear.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="global-water-bg"></div>
+
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <div class="water-bg"></div>
+        <div class="water-overlay"></div>
+        <div class="start-content">
+            <h1 class="game-headline">FISHING CHAINS</h1>
+            <p class="game-subheadline">Climb the Tournament Ladder</p>
+            <button id="start-game-btn" class="primary-btn pulse-btn">START FISHING</button>
+        </div>
+    </div>
+
+    <div id="game-container" style="display:none;">
+        <header>
+            <h1>FISHING CHAINS</h1>
+            <div id="stats-bar">
+                <div class="stat-item"><span id="round-info">Round 1</span></div>
+                <div class="stat-item">HANDS LEFT: <span id="hands-remaining-val">2</span></div>
+                <div class="stat-item">ROUND TOTAL: <span id="round-score-total">0</span> / <span
+                        id="target-val">100</span></div>
+                <div class="stat-item"><span id="target-info">Target: 100</span></div>
+                <div class="stat-item">GOLD: <span id="gold-val">0</span></div>
+            </div>
+        </header>
+
+        <!-- DECK INFO PANEL -->
+        <section id="deck-info">
+            <div class="deck-stats">
+                <div class="deck-stat">
+                    <span class="deck-stat-label">DECK</span>
+                    <span class="deck-stat-val" id="deck-count">52</span>
+                </div>
+                <div class="deck-stat">
+                    <span class="deck-stat-label">DISCARD</span>
+                    <span class="deck-stat-val" id="discard-count">0</span>
+                </div>
+                <div class="deck-divider"></div>
+                <div class="deck-stat suit-blue">
+                    <span class="deck-stat-label">🔵</span>
+                    <span class="deck-stat-val" id="deck-blue">13</span>
+                </div>
+                <div class="deck-stat suit-red">
+                    <span class="deck-stat-label">🔴</span>
+                    <span class="deck-stat-val" id="deck-red">13</span>
+                </div>
+                <div class="deck-stat suit-green">
+                    <span class="deck-stat-label">🟢</span>
+                    <span class="deck-stat-val" id="deck-green">13</span>
+                </div>
+                <div class="deck-stat suit-gold">
+                    <span class="deck-stat-label">🟡</span>
+                    <span class="deck-stat-val" id="deck-gold">13</span>
+                </div>
+            </div>
+        </section>
+
+        <main id="game-board">
+            <div id="score-container">
+                <div id="score">Hand Selection Preview: 0</div>
+                <div id="selection-count">Selected: 0 / 5</div>
+                <div id="combo-text">WAITING...</div>
+                <div class="score-row">
+                    <div id="base-score" class="score-box">0</div>
+                    <div class="score-operator">×</div>
+                    <div id="multiplier" class="score-box">1</div>
+                </div>
+            </div>
+
+            <div id="round-controls">
+                <div id="result-text"></div>
+            </div>
+            <div id="sort-controls">
+                <span class="sort-label">SORT:</span>
+                <button class="sort-btn active" data-sort="default">Default</button>
+                <button class="sort-btn" data-sort="color">Color</button>
+                <button class="sort-btn" data-sort="fish">Fish</button>
+                <button class="sort-btn" data-sort="rank">Rank</button>
+            </div>
+            <div id="debuff-indicator"></div>
+            <div id="hand-display" class="card-area">
+            </div>
+        </main>
+
+        <section id="modifiers-area">
+            <h3>GEAR & MODIFIERS</h3>
+            <div id="active-modifiers" class="modifier-list">
+                <div class="empty-msg">No active gear...</div>
+            </div>
+        </section>
+
+        <footer id="controls">
+            <div class="control-group">
+                <button id="draw-btn" class="primary-btn">DRAW FISH</button>
+                <div id="draw-count-label" class="control-label">Draws: 3/3</div>
+            </div>
+            <div class="control-group">
+                <button id="reroll-btn" class="secondary-btn" disabled>DISCARD</button>
+                <div id="reroll-count-label" class="control-label">Discards: 3/3</div>
+            </div>
+            <div class="control-group">
+                <button id="submit-btn" class="primary-btn" disabled>SUBMIT HAND</button>
+            </div>
+        </footer>
+
+        <!-- REWARD PANEL (Pack + Trim) -->
+        <div id="reward-panel" style="display:none;">
+            <div id="reward-header">
+                <h2 id="reward-title">CHOOSE 1 CARD TO ADD</h2>
+                <p id="reward-subtitle">Pick a card to add to your deck</p>
+            </div>
+            <div id="reward-cards"></div>
+            <div id="reward-controls">
+                <button id="reward-skip-btn" class="secondary-btn" style="display:none; margin-right:1rem;">SKIP PACK</button>
+                <button id="reward-proceed-btn" class="primary-btn" disabled>CONTINUE</button>
+            </div>
+        </div>
+
+        <!-- SHOP PANEL -->
+        <div id="shop-panel" style="display:none;">
+            <div id="shop-header">
+                <h2>SHOP</h2>
+                <div id="shop-gold">GOLD: <span id="shop-gold-val">0</span></div>
+            </div>
+            <div id="shop-offers">
+            </div>
+            <div id="shop-controls">
+                <button id="shop-reroll-btn" class="secondary-btn">REROLL SHOP (50g)</button>
+                <button id="shop-next-round-btn" class="primary-btn">LEAVE SHOP</button>
+            </div>
+        </div>
+
+        <!-- MAP PANEL -->
+        <div id="map-panel" style="display:none;">
+            <div id="map-header">
+                <h2>WORLD MAP</h2>
+                <p id="map-upcoming-desc">Prepare for the next encounter</p>
+            </div>
+            <div id="map-scroller">
+                <div id="map-path"></div>
+            </div>
+            <div id="map-controls">
+                <button id="map-start-btn" class="primary-btn">START ENCOUNTER</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+
+</html>
